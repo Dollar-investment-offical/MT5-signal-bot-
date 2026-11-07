@@ -13,7 +13,6 @@
             --buy-color: #28a745;
             --sell-color: #dc3545;
         }
-
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
@@ -24,134 +23,33 @@
             flex-direction: column;
             align-items: center;
         }
-
-        .container {
-            width: 100%;
-            max-width: 480px;
-        }
-
-        h1 {
-            color: var(--accent-gold);
-            text-align: center;
-            font-size: 22px;
-            margin-bottom: 5px;
-        }
-
-        p.subtitle {
-            text-align: center;
-            font-size: 13px;
-            color: #888;
-            margin-bottom: 20px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid #333;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-
-        label {
-            font-size: 13px;
-            color: var(--accent-gold);
-            font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        input[type="text"], input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            background: #2a2a2a;
-            border: 1px solid #444;
-            color: #fff;
-            border-radius: 6px;
-            box-sizing: border-box;
-            margin-bottom: 10px;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background: var(--accent-gold);
-            border: none;
-            color: #000;
-            font-weight: bold;
-            font-size: 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 5px;
-        }
-
-        button:disabled {
-            background: #555;
-            color: #888;
-        }
-
-        #previewImg {
-            width: 100%;
-            border-radius: 6px;
-            display: none;
-            margin-top: 10px;
-            border: 1px solid #444;
-        }
-
-        .result-box {
-            display: none;
-            background: #252525;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
-            border-left: 5px solid var(--accent-gold);
-        }
-
-        .signal-title {
-            font-size: 20px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
+        .container { width: 100%; max-width: 480px; }
+        h1 { color: var(--accent-gold); text-align: center; font-size: 22px; margin-bottom: 5px; }
+        p.subtitle { text-align: center; font-size: 13px; color: #888; margin-bottom: 20px; }
+        .card { background: var(--card-bg); border: 1px solid #333; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
+        label { font-size: 13px; color: var(--accent-gold); font-weight: bold; display: block; margin-bottom: 5px; }
+        input[type="text"], input[type="file"] { width: 100%; padding: 10px; background: #2a2a2a; border: 1px solid #444; color: #fff; border-radius: 6px; box-sizing: border-box; margin-bottom: 10px; }
+        button { width: 100%; padding: 12px; background: var(--accent-gold); border: none; color: #000; font-weight: bold; font-size: 15px; border-radius: 6px; cursor: pointer; margin-top: 5px; }
+        button:disabled { background: #555; color: #888; }
+        #previewImg { width: 100%; border-radius: 6px; display: none; margin-top: 10px; border: 1px solid #444; }
+        .result-box { display: none; background: #252525; border-radius: 8px; padding: 15px; margin-top: 15px; border-left: 5px solid var(--accent-gold); }
+        .signal-title { font-size: 20px; font-weight: bold; text-align: center; margin-bottom: 10px; }
         .BUY { color: var(--buy-color); border-left-color: var(--buy-color); }
         .SELL { color: var(--sell-color); border-left-color: var(--sell-color); }
         .WAIT { color: var(--accent-gold); border-left-color: var(--accent-gold); }
-
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            padding: 6px 0;
-            border-bottom: 1px solid #333;
-        }
-
+        .info-row { display: flex; justify-content: space-between; font-size: 14px; padding: 6px 0; border-bottom: 1px solid #333; }
         .info-row:last-child { border-bottom: none; }
         .info-label { color: #aaa; }
         .info-val { font-weight: bold; color: #fff; }
-
-        .analysis-text {
-            font-size: 13px;
-            color: #ccc;
-            line-height: 1.5;
-            margin-top: 10px;
-            background: #1a1a1a;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .loading {
-            text-align: center;
-            display: none;
-            color: var(--accent-gold);
-            margin-top: 10px;
-        }
+        .analysis-text { font-size: 13px; color: #ccc; line-height: 1.5; margin-top: 10px; background: #1a1a1a; padding: 10px; border-radius: 5px; }
+        .loading { text-align: center; display: none; color: var(--accent-gold); margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>Gemini MT5 Analyzer</h1>
-    <p class="subtitle">Upload or paste MT5 chart screenshot (Free API)</p>
+    <p class="subtitle">Upload or paste MT5 chart screenshot</p>
 
     <div class="card">
         <label for="apiKey">Gemini API Key:</label>
@@ -168,20 +66,9 @@
 
     <div class="result-box" id="resultBox">
         <div class="signal-title" id="signalTitle">SIGNAL</div>
-        
-        <div class="info-row">
-            <span class="info-label">Recommended Action:</span>
-            <span class="info-val" id="actionVal">-</span>
-        </div>
-        <div class="info-row">
-            <span class="info-label">Suggested Duration:</span>
-            <span class="info-val" id="durationVal">-</span>
-        </div>
-        <div class="info-row">
-            <span class="info-label">Target / Timeframe:</span>
-            <span class="info-val" id="timeframeVal">-</span>
-        </div>
-
+        <div class="info-row"><span class="info-label">Recommended Action:</span><span class="info-val" id="actionVal">-</span></div>
+        <div class="info-row"><span class="info-label">Suggested Duration:</span><span class="info-val" id="durationVal">-</span></div>
+        <div class="info-row"><span class="info-label">Target / Timeframe:</span><span class="info-val" id="timeframeVal">-</span></div>
         <div class="analysis-text" id="analysisVal"></div>
     </div>
 </div>
@@ -192,9 +79,7 @@
 
     window.onload = function() {
         const savedKey = localStorage.getItem("gemini_api_key");
-        if (savedKey) {
-            document.getElementById("apiKey").value = savedKey;
-        }
+        if (savedKey) { document.getElementById("apiKey").value = savedKey; }
     };
 
     function saveApiKey() {
@@ -205,15 +90,12 @@
     function handleImageSelect(event) {
         const file = event.target.files[0];
         if (!file) return;
-
         mimeType = file.type;
         const reader = new FileReader();
         reader.onload = function(e) {
-            const fullBase64 = e.target.result;
-            base64Data = fullBase64.split(',')[1];
-
+            base64Data = e.target.result.split(',')[1];
             const img = document.getElementById("previewImg");
-            img.src = fullBase64;
+            img.src = e.target.result;
             img.style.display = "block";
             document.getElementById("analyzeBtn").disabled = false;
         };
@@ -232,15 +114,8 @@
 
     async function analyzeChart() {
         const apiKey = document.getElementById("apiKey").value.trim();
-        if (!apiKey) {
-            alert("Please enter your Gemini API Key.");
-            return;
-        }
-
-        if (!base64Data) {
-            alert("Please select or paste an image first.");
-            return;
-        }
+        if (!apiKey) { alert("Please enter your Gemini API Key."); return; }
+        if (!base64Data) { alert("Please select or paste an image first."); return; }
 
         const btn = document.getElementById("analyzeBtn");
         const loading = document.getElementById("loading");
@@ -250,53 +125,28 @@
         loading.style.display = "block";
         resultBox.style.display = "none";
 
-        const promptText = `
-You are an expert technical trader. Analyze this MT5 candlestick chart image carefully.
-Return your response STRICTLY as a valid JSON object with these exact keys:
-{
-  "action": "BUY" or "SELL" or "WAIT",
-  "recommended_duration": "e.g. 30 Minutes, 1 Hour, 1 Day",
-  "timeframe_detected": "e.g. M15, M30, H1, D1",
-  "simple_explanation": "Provide a simple 2-sentence English explanation of why this trade is suggested based on market trends or indicators."
-}
-        `;
+        const promptText = `You are an expert technical trader. Analyze this MT5 candlestick chart image carefully. Return your response STRICTLY as a valid JSON object with these exact keys: {"action": "BUY" or "SELL" or "WAIT", "recommended_duration": "e.g. 30 Minutes, 1 Hour, 1 Day", "timeframe_detected": "e.g. M15, M30, H1, D1", "simple_explanation": "Provide a simple 2-sentence English explanation of why this trade is suggested based on market trends or indicators."}`;
 
         try {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
+            // Using the official stable gemini-1.5-flash endpoint
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
             
             const response = await fetch(url, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    contents: [
-                        {
-                            parts: [
-                                { text: promptText },
-                                {
-                                    inline_data: {
-                                        mime_type: mimeType,
-                                        data: base64Data
-                                    }
-                                }
-                            ]
-                        }
-                    ],
-                    generationConfig: {
-                        response_mime_type: "application/json"
-                    }
+                    contents: [{
+                        parts: [
+                            { text: promptText },
+                            { inline_data: { mime_type: mimeType, data: base64Data } }
+                        ]
+                    }],
+                    generationConfig: { response_mime_type: "application/json" }
                 })
             });
 
             const data = await response.json();
-            
-            if (data.error) {
-                alert("API Error: " + data.error.message);
-                btn.disabled = false;
-                loading.style.display = "none";
-                return;
-            }
+            if (data.error) { alert("API Error: " + data.error.message); btn.disabled = false; loading.style.display = "none"; return; }
 
             const rawText = data.candidates[0].content.parts[0].text;
             const result = JSON.parse(rawText);
@@ -312,7 +162,6 @@ Return your response STRICTLY as a valid JSON object with these exact keys:
             document.getElementById("analysisVal").innerText = result.simple_explanation;
 
             resultBox.style.display = "block";
-
         } catch (err) {
             alert("Failed to analyze chart: " + err.message);
         } finally {
@@ -321,6 +170,5 @@ Return your response STRICTLY as a valid JSON object with these exact keys:
         }
     }
 </script>
-
 </body>
 </html>
