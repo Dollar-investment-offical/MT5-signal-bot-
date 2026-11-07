@@ -128,7 +128,8 @@
         const promptText = `You are an expert technical trader. Analyze this MT5 candlestick chart image carefully. Return your response STRICTLY as a valid JSON object with these exact keys: {"action": "BUY" or "SELL" or "WAIT", "recommended_duration": "e.g. 30 Minutes, 1 Hour, 1 Day", "timeframe_detected": "e.g. M15, M30, H1, D1", "simple_explanation": "Provide a simple 2-sentence English explanation of why this trade is suggested based on market trends or indicators."}`;
 
         try {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            // Updated to the exact required gemini-3.8-flash endpoint
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
             
             const response = await fetch(url, {
                 method: "POST",
