@@ -209,7 +209,6 @@
         mimeType = file.type;
         const reader = new FileReader();
         reader.onload = function(e) {
-            // Extract base64 raw data without prefix for Gemini API
             const fullBase64 = e.target.result;
             base64Data = fullBase64.split(',')[1];
 
@@ -221,7 +220,6 @@
         reader.readAsDataURL(file);
     }
 
-    // Support paste action directly
     window.addEventListener('paste', e => {
         if (e.clipboardData.files.length > 0) {
             const file = e.clipboardData.files[0];
@@ -264,7 +262,7 @@ Return your response STRICTLY as a valid JSON object with these exact keys:
         `;
 
         try {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${apiKey}`;
             
             const response = await fetch(url, {
                 method: "POST",
