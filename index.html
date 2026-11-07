@@ -1,204 +1,321 @@
 <!DOCTYPE html>
-<html lang="ur">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MT5 Advance Signal Dashboard</title>
+    <title>AI Chart Signal Analyzer</title>
     <style>
         :root {
-            --bg-color: #1a1512;
-            --card-bg: #2a221c;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
             --accent-gold: #d4af37;
-            --text-light: #f5f0eb;
-            --green-buy: #28a745;
-            --red-sell: #dc3545;
+            --text-main: #e0e0e0;
+            --buy-color: #28a745;
+            --sell-color: #dc3545;
         }
 
         body {
             background-color: var(--bg-color);
-            color: var(--text-light);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             margin: 0;
             padding: 15px;
-            direction: rtl;
-        }
-
-        .header {
-            text-align: center;
-            padding: 10px;
-            border-bottom: 2px solid var(--accent-gold);
-            margin-bottom: 20px;
-        }
-
-        .header h1 {
-            color: var(--accent-gold);
-            margin: 0 0 5px 0;
-            font-size: 22px;
-        }
-
-        .controls {
             display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: center;
         }
 
-        select, button {
-            background: var(--card-bg);
+        .container {
+            width: 100%;
+            max-width: 480px;
+        }
+
+        h1 {
             color: var(--accent-gold);
-            border: 1px solid var(--accent-gold);
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 14px;
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 5px;
         }
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
+        p.subtitle {
+            text-align: center;
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 20px;
         }
 
         .card {
             background: var(--card-bg);
-            border: 1px solid #44362b;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 13px;
+            color: var(--accent-gold);
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 6px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent-gold);
+            border: none;
+            color: #000;
+            font-weight: bold;
+            font-size: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        button:disabled {
+            background: #555;
+            color: #888;
+        }
+
+        #previewImg {
+            width: 100%;
+            border-radius: 6px;
+            display: none;
+            margin-top: 10px;
+            border: 1px solid #444;
+        }
+
+        .result-box {
+            display: none;
+            background: #252525;
             border-radius: 8px;
             padding: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            position: relative;
+            margin-top: 15px;
+            border-left: 5px solid var(--accent-gold);
         }
 
-        .card-header {
+        .signal-title {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .BUY { color: var(--buy-color); border-left-color: var(--buy-color); }
+        .SELL { color: var(--sell-color); border-left-color: var(--sell-color); }
+        .WAIT { color: var(--accent-gold); border-left-color: var(--accent-gold); }
+
+        .info-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #3d3127;
-            padding-bottom: 8px;
+            font-size: 14px;
+            padding: 6px 0;
+            border-bottom: 1px solid #333;
         }
 
-        .pair-name {
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--accent-gold);
-        }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: #aaa; }
+        .info-val { font-weight: bold; color: #fff; }
 
-        .price-tag {
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .signal-box {
-            margin: 15px 0;
+        .analysis-text {
+            font-size: 13px;
+            color: #ccc;
+            line-height: 1.5;
+            margin-top: 10px;
+            background: #1a1a1a;
             padding: 10px;
             border-radius: 5px;
+        }
+
+        .loading {
             text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        .buy-signal { background: rgba(40, 167, 69, 0.2); color: var(--green-buy); border: 1px solid var(--green-buy); }
-        .sell-signal { background: rgba(220, 53, 69, 0.2); color: var(--red-sell); border: 1px solid var(--red-sell); }
-        .neutral-signal { background: rgba(212, 175, 55, 0.2); color: var(--accent-gold); border: 1px solid var(--accent-gold); }
-
-        .details {
-            font-size: 13px;
-            line-height: 1.6;
-            color: #d1c7bd;
-        }
-
-        .details span {
-            color: var(--text-light);
-            font-weight: bold;
-        }
-
-        .time-badge {
-            font-size: 11px;
-            background: #3d3127;
-            padding: 2px 6px;
-            border-radius: 3px;
+            display: none;
             color: var(--accent-gold);
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>MT5 Advance Live Signal Board</h1>
-        <small>موبائل اور ڈیسک ٹاپ کے لیے ایڈوانس پریڈکشن سسٹم</small>
+<div class="container">
+    <h1>Chart Signal AI Analyzer</h1>
+    <p class="subtitle">Upload or paste any MT5 chart screenshot</p>
+
+    <div class="card">
+        <label for="apiKey">OpenAI API Key (Vision API):</label>
+        <input type="text" id="apiKey" placeholder="sk-..." onchange="saveApiKey()">
+        
+        <label for="imageInput">Select or Paste Chart Screenshot:</label>
+        <input type="file" id="imageInput" accept="image/*" onchange="handleImageSelect(event)">
+        
+        <img id="previewImg" alt="Chart Preview">
+
+        <button id="analyzeBtn" onclick="analyzeChart()" disabled>Analyze Market & Get Signal</button>
+        <div class="loading" id="loading">Analyzing Chart Patterns & Technicals...</div>
     </div>
 
-    <div class="controls">
-        <label>تخمیناتی وقت (Timeframe): </label>
-        <select id="timeframeSelect" onchange="generateSignals()">
-            <option value="20m">20 منٹ (Short Scalp)</option>
-            <option value="30m" selected>30 منٹ (Intraday)</option>
-            <option value="40m">40 منٹ (Intraday)</option>
-            <option value="1d">1 دن (Swing Trade)</option>
-            <option value="2d">2 دن (Position Trade)</option>
-        </select>
-        <button onclick="generateSignals()">ریفریش سگنلز</button>
+    <div class="result-box" id="resultBox">
+        <div class="signal-title" id="signalTitle">SIGNAL</div>
+        
+        <div class="info-row">
+            <span class="info-label">Recommended Action:</span>
+            <span class="info-val" id="actionVal">-</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Suggested Duration:</span>
+            <span class="info-val" id="durationVal">-</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Target / Timeframe:</span>
+            <span class="info-val" id="timeframeVal">-</span>
+        </div>
+
+        <div class="analysis-text" id="analysisVal">
+            <!-- Analysis will appear here -->
+        </div>
     </div>
+</div>
 
-    <div class="grid-container" id="dashboardGrid">
-        <!-- Live Pairs Cards Will Be Generated Here -->
-    </div>
+<script>
+    let base64Image = "";
 
-    <script>
-        const pairsData = [
-            { symbol: "XAUUSD (Gold)", basePrice: 4065.00, volatility: 3.5 },
-            { symbol: "BTCUSD (Bitcoin)", basePrice: 75950.00, volatility: 250 },
-            { symbol: "XAGUSD (Silver)", basePrice: 51.87, volatility: 0.15 },
-            { symbol: "ETHUSD (Ethereum)", basePrice: 2244.85, volatility: 15.0 }
-        ];
+    // Load saved API key from localStorage
+    window.onload = function() {
+        const savedKey = localStorage.getItem("openai_api_key");
+        if (savedKey) {
+            document.getElementById("apiKey").value = savedKey;
+        }
+    };
 
-        function getRandomSignal() {
-            const types = ["BUY / LONG", "SELL / SHORT", "WAIT / NEUTRAL"];
-            return types[Math.floor(Math.random() * types.length)];
+    function saveApiKey() {
+        const key = document.getElementById("apiKey").value.trim();
+        localStorage.setItem("openai_api_key", key);
+    }
+
+    function handleImageSelect(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            base64Image = e.target.result;
+            const img = document.getElementById("previewImg");
+            img.src = base64Image;
+            img.style.display = "block";
+            document.getElementById("analyzeBtn").disabled = false;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Support paste action directly
+    window.addEventListener('paste', e => {
+        if (e.clipboardData.files.length > 0) {
+            const file = e.clipboardData.files[0];
+            if (file.type.startsWith('image/')) {
+                document.getElementById("imageInput").files = e.clipboardData.files;
+                handleImageSelect({ target: { files: [file] } });
+            }
+        }
+    });
+
+    async function analyzeChart() {
+        const apiKey = document.getElementById("apiKey").value.trim();
+        if (!apiKey) {
+            alert("Please enter a valid OpenAI API key.");
+            return;
         }
 
-        function generateSignals() {
-            const grid = document.getElementById("dashboardGrid");
-            const tf = document.getElementById("timeframeSelect").value;
-            grid.innerHTML = "";
+        if (!base64Image) {
+            alert("Please select or paste an image first.");
+            return;
+        }
 
-            pairsData.forEach(pair => {
-                const signal = getRandomSignal();
-                let signalClass = "neutral-signal";
-                if(signal.includes("BUY")) signalClass = "buy-signal";
-                if(signal.includes("SELL")) signalClass = "sell-signal";
+        const btn = document.getElementById("analyzeBtn");
+        const loading = document.getElementById("loading");
+        const resultBox = document.getElementById("resultBox");
 
-                const currentPrice = (pair.basePrice + (Math.random() * pair.volatility - pair.volatility/2)).toFixed(2);
-                const tp = signal.includes("BUY") ? (parseFloat(currentPrice) + pair.volatility * 1.5).toFixed(2) : (parseFloat(currentPrice) - pair.volatility * 1.5).toFixed(2);
-                const sl = signal.includes("BUY") ? (parseFloat(currentPrice) - pair.volatility * 0.8).toFixed(2) : (parseFloat(currentPrice) + pair.volatility * 0.8).toFixed(2);
+        btn.disabled = true;
+        loading.style.display = "block";
+        resultBox.style.display = "none";
 
-                const cardHTML = `
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="pair-name">${pair.symbol}</span>
-                            <span class="time-badge">${tf}</span>
-                        </div>
-                        <div style="margin-top: 8px;">
-                            قیمت: <span class="price-tag">${currentPrice}</span>
-                        </div>
-                        <div class="signal-box ${signalClass}">
-                            ${signal}
-                        </div>
-                        <div class="details">
-                            پیشنگوئی وقت: <span>${tf}</span><br>
-                            ٹیک پرافٹ (TP): <span>${tp}</span><br>
-                            اسٹاپ لاس (SL): <span>${sl}</span><br>
-                            تکنیکی انڈیکیٹر: <span>EMA 8/21 + RSI (14)</span>
-                        </div>
-                    </div>
-                `;
-                grid.innerHTML += cardHTML;
+        const promptText = `
+You are a expert technical trader. Analyze this candlestick chart image carefully.
+Return your response STRICTLY in valid JSON format with the following keys:
+{
+  "action": "BUY" or "SELL" or "WAIT",
+  "recommended_duration": "e.g. 30 Minutes, 1 Hour, 4 Hours, 1 Day",
+  "timeframe_detected": "e.g. M15, M30, H1, D1",
+  "simple_explanation": "Provide a simple 2-sentence explanation of why this trade is suggested based on market trends, support/resistance, or indicators present."
+}
+        `;
+
+        try {
+            const response = await fetch("https://api.openai.com/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: "gpt-4o",
+                    messages: [
+                        {
+                            role: "user",
+                            content: [
+                                { type: "text", text: promptText },
+                                { type: "image_url", image_url: { url: base64Image } }
+                            ]
+                        }
+                    ],
+                    max_tokens: 300,
+                    response_format: { type: "json_object" }
+                })
             });
-        }
 
-        // Initial Call
-        generateSignals();
-    </script>
+            const data = await response.json();
+            
+            if (data.error) {
+                alert("API Error: " + data.error.message);
+                btn.disabled = false;
+                loading.style.display = "none";
+                return;
+            }
+
+            const result = JSON.parse(data.choices[0].message.content);
+
+            // Populate UI
+            const action = result.action.toUpperCase();
+            document.getElementById("signalTitle").innerText = action + " SIGNAL";
+            document.getElementById("signalTitle").className = "signal-title " + action;
+            document.getElementById("resultBox").className = "result-box " + action;
+            
+            document.getElementById("actionVal").innerText = action;
+            document.getElementById("durationVal").innerText = result.recommended_duration;
+            document.getElementById("timeframeVal").innerText = result.timeframe_detected;
+            document.getElementById("analysisVal").innerText = result.simple_explanation;
+
+            resultBox.style.display = "block";
+
+        } catch (err) {
+            alert("Failed to analyze chart: " + err.message);
+        } finally {
+            btn.disabled = false;
+            loading.style.display = "none";
+        }
+    }
+</script>
+
 </body>
 </html>
