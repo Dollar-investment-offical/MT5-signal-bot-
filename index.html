@@ -128,7 +128,6 @@
         const promptText = `You are an expert technical trader. Analyze this MT5 candlestick chart image carefully. Return your response STRICTLY as a valid JSON object with these exact keys: {"action": "BUY" or "SELL" or "WAIT", "recommended_duration": "e.g. 30 Minutes, 1 Hour, 1 Day", "timeframe_detected": "e.g. M15, M30, H1, D1", "simple_explanation": "Provide a simple 2-sentence English explanation of why this trade is suggested based on market trends or indicators."}`;
 
         try {
-            // Updated to use the correct supported Gemini model endpoint
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
             
             const response = await fetch(url, {
@@ -137,7 +136,7 @@
                 body: JSON.stringify({
                     contents: [{
                         parts: [
-                            { text: promptTest },
+                            { text: promptText },
                             { inline_data: { mime_type: mimeType, data: base64Data } }
                         ]
                     }],
@@ -154,7 +153,7 @@
             const action = result.action.toUpperCase();
             document.getElementById("signalTitle").innerText = action + " SIGNAL";
             document.getElementById("signalTitle").className = "signal-title " + action;
-            document.getElementById("resultBox").className, "result-box " + action;
+            document.getElementById("resultBox").className = "result-box " + action;
             
             document.getElementById("actionVal").innerText = action;
             document.getElementById("durationVal").innerText = result.recommended_duration;
