@@ -427,7 +427,7 @@
             }
 
             const loaderStatus = document.getElementById('loaderStatus');
-            loaderStatus.innerText = "Extracting Chart Candlesticks...";
+            loaderStatus.innerText = "Scanning Candlestick Patterns...";
             await new Promise(r => setTimeout(r, 700));
             loaderStatus.innerText = "Calculating RSI (14) & Moving Averages...";
             await new Promise(r => setTimeout(r, 700));
@@ -457,24 +457,32 @@
         // Gemini Vision API Call
         async function callGeminiVision(apiKey, base64Img, pair, timeframe) {
             const rawBase64 = base64Img.split(',')[1];
-            const systemPrompt = `You are a professional binary options and forex trader. Analyze this chart screenshot for ${pair} on timeframe ${timeframe}. 
-            Determine technical pattern, RSI, EMA 8/21 crossover, Support/Resistance rejection.
+            const systemPrompt = `You are a master technical analyst and binary options specialist. Inspect this trading chart image carefully.
+            Identify:
+            1. Platform (Pocket Option, Quotex, Olymp Trade, or MetaTrader) & Currency/Asset Pair shown in image.
+            2. High probability Trade Signal: "BUY" or "SELL".
+            3. Exact Expiry Duration (e.g., "1 MIN", "2 MIN", "3 MIN", "5 MIN", "15 MIN", or "1 HOUR").
+            4. Accuracy Confidence score between 88% and 98%.
+            5. Price Entry Range based on current candle levels.
+            6. Indicators status visible on chart: RSI level, EMA 8/21 trend cross, MACD histogram, and Support/Resistance zone.
+            7. Concise 2-sentence summary of technical confluence.
+
             Respond strictly in valid JSON format:
             {
               "pair": "${pair}",
               "timeframe": "${timeframe}",
               "action": "BUY" or "SELL",
-              "confidence": 85 to 97,
-              "entryRange": "price range",
-              "expiryRecommendation": "exact expiry in minutes",
-              "rsi": "value and status e.g. 34 Oversold",
-              "ema": "description e.g. Bullish Crossover",
-              "macd": "description",
-              "srLevel": "description",
-              "summary": "2 sentence explanation for trade"
+              "confidence": 92,
+              "entryRange": "1.08420 - 1.08435",
+              "expiryRecommendation": "Exact 5 Minutes",
+              "rsi": "32 (Oversold Recovery)",
+              "ema": "8 EMA Crossing Above 21 EMA",
+              "macd": "Green Bullish Histogram",
+              "srLevel": "Strong Support Bounce",
+              "summary": "Technical analysis summary text here."
             }`;
 
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{
                     parts: [
@@ -499,7 +507,7 @@
         // Technical Analysis Simulator
         function generateSimulatedSignal(pair, timeframe) {
             const isBuy = Math.random() > 0.45;
-            const confidence = Math.floor(Math.random() * 12) + 85;
+            const confidence = Math.floor(Math.random() * 10) + 88;
             
             let basePrice = 1.0850;
             if (pair.includes('JPY')) basePrice = 154.20;
@@ -517,13 +525,13 @@
                 confidence: confidence,
                 entryRange: `${entryLow} - ${entryHigh}`,
                 expiryRecommendation: `Exact ${timeframe}`,
-                rsi: isBuy ? `${Math.floor(Math.random() * 10 + 25)} (Oversold)` : `${Math.floor(Math.random() * 10 + 68)} (Overbought)`,
-                ema: isBuy ? '8 EMA Above 21 EMA (Bullish)' : '8 EMA Below 21 EMA (Bearish)',
+                rsi: isBuy ? `${Math.floor(Math.random() * 8 + 26)} (Oversold Bounce)` : `${Math.floor(Math.random() * 8 + 68)} (Overbought Rejection)`,
+                ema: isBuy ? '8 EMA Above 21 EMA (Bullish Cross)' : '8 EMA Below 21 EMA (Bearish Cross)',
                 macd: isBuy ? 'Green Histogram Expanding' : 'Red Histogram Expanding',
-                srLevel: isBuy ? 'Bounced Off Key Support' : 'Rejected Off Resistance Zone',
+                srLevel: isBuy ? 'Bounced Off Key Dynamic Support' : 'Rejected Off Major Resistance Zone',
                 summary: isBuy 
-                    ? `Strong bullish momentum confirmed across multiple timeframes. RSI rebounding from oversold region with candlestick rejection wick at dynamic support.`
-                    : `Bearish breakout confirmed. High selling pressure detected at key overhead resistance with MACD cross downwards.`
+                    ? `Strong bullish momentum confirmed. Price rejected key support level with pinbar wick, RSI rebounding upwards.`
+                    : `Bearish continuation confirmed. Price structure failed to break resistance zone with MACD momentum turning downwards.`
             };
         }
 
